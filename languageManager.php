@@ -1,3 +1,5 @@
+https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Language%21LanguageManagerInterface.php/interface/LanguageManagerInterface/10
+
 <?php
 
 \Drupal::languageManager()->getCurrentLanguage()->getId();
