@@ -1,5 +1,6 @@
 https://api.drupal.org/api/drupal/core!lib!Drupal!Core!State!State.php/class/State
 https://www.drupal.org/docs/8/api/state-api/overview
+https://antistatique.net/en/blog/drupal-8-differences-between-configuration-api-state-api
 
 <?php
 
