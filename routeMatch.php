@@ -1,9 +1,20 @@
-//https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Routing%21RouteMatch.php/class/RouteMatch/8.2.x
+//https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Routing%21RouteMatch.php/class/RouteMatch/10
+//https://api.drupal.org/api/drupal/core%21tests%21Drupal%21Tests%21Core%21Routing%21RouteMatchTest.php/10
 
 <?php
 
-// ?
-\Drupal::routeMatch()->createFromRequest();
+use Drupal\Core\Routing\RouteMatch;
+use Drupal\Core\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
+
+// Return a RouteMatch Object from a specific Request not from the current route in url
+$route = new Route('/test-route/{foo}');
+$request = new Request();
+$request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'test_route');
+$request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, $route);
+$request->attributes->set('foo', '1');
+RouteMatch::createFromRequest($request);
 
 // Return the GET param pass in url and {param} in routing.yml, ex: /web/example/{page} in routing.yml and /web/example/1 in url
 // /web/example/1
