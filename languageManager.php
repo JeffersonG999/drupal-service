@@ -2,9 +2,15 @@ https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Language%21Langua
 
 <?php
 
-\Drupal::languageManager()->getCurrentLanguage()->getId();
+// Return object of current language and attributes
+\Drupal::languageManager()->getCurrentLanguage();
 \Drupal::languageManager()->getCurrentLanguage()->getName();
+\Drupal::languageManager()->getCurrentLanguage()->getId();
 \Drupal::languageManager()->getCurrentLanguage()->getDirection();
+\Drupal::languageManager()->getCurrentLanguage()->getWeight();
+\Drupal::languageManager()->getCurrentLanguage()->getLocked();
+
+
 \Drupal::languageManager()->getLanguage('langcode');
 \Drupal::languageManager()->getLanguages();
 \Drupal::languageManager()->reset();
@@ -12,4 +18,4 @@ https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Language%21Langua
 \Drupal::languageManager()->getDefaultLanguage()->getId();
 \Drupal::languageManager()->getLanguageConfigOverride('af', 'system.maintenance');
 \Drupal::languageManager()->getLanguageConfigOverride('es', 'user.settings');
-\Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
+
