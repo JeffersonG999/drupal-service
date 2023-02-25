@@ -2,9 +2,8 @@
 
 <?php
 
-// Return route key from routing.yml, ex: web.example, system.admin
-// Never return route path ex: /web/example, /system/admin
-\Drupal::routeMatch()->getRouteName();
+// ?
+\Drupal::routeMatch()->createFromRequest();
 
 // Return the GET param pass in url and {param} in routing.yml, ex: /web/example/{page} in routing.yml and /web/example/1 in url
 // /web/example/1
@@ -14,12 +13,40 @@
 \Drupal::routeMatch()->getParameter('page');
 // jeff
 
-RouteMatch::getRawParameter	
-RouteMatch::getRawParameters
-
 // Return an array with key, value GET parameters, ex: /web/example/{test}/{testbis}/{testbisbis} in routing.yml and /web/example/1/2/3 in url
 // /web/example/1/2/3
 \Drupal::routeMatch()->getParameters()->all();
 // array([test] => 1 [testbis] => 2 [testbisbis] => 3)
 
-\Drupal::routeMatch()->getRouteObject()->getOption('option_name');
+// Return the GET param pass in url and {param} in routing.yml, ex: /web/example/{page} in routing.yml and /web/example/1 in url
+// /web/example/1
+\Drupal::routeMatch()->getRawParameter('page');
+// 1
+// /web/example/jeff
+\Drupal::routeMatch()->getRawParameter('page');
+// jeff
+
+// Return an array with key, value GET parameters, ex: /web/example/{test}/{testbis}/{testbisbis} in routing.yml and /web/example/1/2/3 in url
+// /web/example/1/2/3
+\Drupal::routeMatch()->getRawParameters()->all();
+// array([test] => 1 [testbis] => 2 [testbisbis] => 3)
+
+// Return route key from routing.yml, ex: web.example, system.admin
+// Never return route path ex: /web/example, /system/admin
+\Drupal::routeMatch()->getRouteName();
+
+// Return an object of the current route
+\Drupal::routeMatch()->getRouteObject();
+// Can access to object element with get function
+\Drupal::routeMatch()->getRouteObject()->getPath();
+\Drupal::routeMatch()->getRouteObject()->getHost();
+\Drupal::routeMatch()->getRouteObject()->getSchemes();
+\Drupal::routeMatch()->getRouteObject()->getMethods();
+\Drupal::routeMatch()->getRouteObject()->getDefaults();
+\Drupal::routeMatch()->getRouteObject()->getRequirements();
+\Drupal::routeMatch()->getRouteObject()->getOptions();
+\Drupal::routeMatch()->getRouteObject()->getOption('compiler_class');
+\Drupal::routeMatch()->getRouteObject()->getCondition();
+\Drupal::routeMatch()->getRouteObject()->compile()->getVariables();
+
+
