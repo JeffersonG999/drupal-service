@@ -36,3 +36,18 @@ $cids = array(
 \Drupal::cache()->get('jefferson');
 \Drupal::cache()->getMultiple($cids);
 
+//
+\Drupal::cache()->invalidate('jeff');
+\Drupal::cache()->get('jeff');
+\Drupal::cache()->get('jeff', TRUE);
+
+//
+\Drupal::cache()->invalidateMultiple($cids);
+\Drupal::cache()->getMultiple($cids);
+\Drupal::cache()->getMultiple($cids, TRUE);
+  
+//
+\Drupal::cache()->invalidateAll();
+\Drupal::cache()->getMultiple($cids);
+\Drupal::cache()->getMultiple($cids, TRUE);
+  
