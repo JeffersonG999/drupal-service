@@ -50,4 +50,11 @@ $cids = array(
 \Drupal::cache()->invalidateAll();
 \Drupal::cache()->getMultiple($cids);
 \Drupal::cache()->getMultiple($cids, TRUE);
-  
+
+//
+\Drupal::cache()->set('jeff', 'goven');
+\Drupal::cache()->invalidate('jeff');
+\Drupal::cache()->garbageCollection();
+\Drupal::cache()->get('jeff');
+
+// 
