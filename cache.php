@@ -1,3 +1,5 @@
+https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Cache%21CacheBackendInterface.php/interface/CacheBackendInterface/10
+
 <?php
 
 // Request default cache bin
@@ -76,3 +78,38 @@ $cids = array(
 \Drupal::cache()->set('jeff2', 'goven2', Cache::PERMANENT, array('user:2', 'node:2'));
 \Drupal::cache()->set('jeff3', 'goven3', Cache::PERMANENT, array('user:3', 'node:3'));
 Cache::invalidateTags(array('node:1'));
+
+// Drupal core cache context
+cookies
+  :name
+headers
+  :name
+ip
+languages
+  :type
+protocol_version // Available in 8.9.x or higher.
+request_format
+route
+  .book_navigation
+  .menu_active_trails
+    :menu_name
+  .name
+session
+  .exists
+theme
+timezone
+url
+  .path
+    .is_front // Available in 8.3.x or higher.
+    .parent
+  .query_args
+    :key
+    .pagers
+      :pager_id
+  .site
+user
+  .is_super_user
+  .node_grants
+    :operation
+  .permissions
+  .roles
