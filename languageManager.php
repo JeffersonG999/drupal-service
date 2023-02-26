@@ -81,3 +81,9 @@ foreach ($languages as $language) {
 $languages = \Drupal::languageManager()->getStandardLanguageList();
 foreach ($languages as $language_code => $language_value) {
 }
+
+// Checks whether a language is locked.
+$isLanguageLocked = \Drupal::languageManager()->isLanguageLocked('fr');
+
+// Returns whether or not the site has more than one language added.
+\Drupal::languageManager()->isMultilingual();
