@@ -62,9 +62,22 @@ foreach ($languages as $language) {
 // Returns an array of the available language types.
 \Drupal::languageManager()->getLanguageTypes()
 
-\Drupal::languageManager()->reset();
-\Drupal::languageManager()->isMultilingual();
-\Drupal::languageManager()->getDefaultLanguage()->getId();
-\Drupal::languageManager()->getLanguageConfigOverride('af', 'system.maintenance');
-\Drupal::languageManager()->getLanguageConfigOverride('es', 'user.settings');
+// Returns a list of languages set up on the site in their native form.
+$languages = \Drupal::languageManager()->getNativeLanguages();
+foreach ($languages as $language) {
+  $language->getEntityTypeId();
+  $language->getTypedData();
+  $language->getCacheContexts();
+  $language->getCacheTags();
+  $language->getCacheMaxAge();
+  $language->getOriginalId();
+  $language->id();
+  $language->label();
+  $language->getDirection();
+  $language->getWeight();
+}
 
+// Some common languages with their English and native names
+$languages = \Drupal::languageManager()->getStandardLanguageList();
+foreach ($languages as $language_code => $language_value) {
+}
