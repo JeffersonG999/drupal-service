@@ -66,6 +66,9 @@ $cids = array(
 \Drupal::cache()->get('jeff', TRUE);
 
 //
+\Drupal::cache()->set('my_cache_item', $school_list, \Drupal::time()->getRequestTime() + (86400));
+
+//
 // node:5 — cache tag for Node entity 5 (invalidated whenever it changes)
 // user:3 — cache tag for User entity 3 (invalidated whenever it changes)
 // node_list — list cache tag for Node entities (invalidated whenever any Node entity is updated, deleted or created, i.e., when a listing of nodes may need to change). Applicable to any entity type in following format: {entity_type}_list.
