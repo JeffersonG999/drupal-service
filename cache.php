@@ -58,3 +58,7 @@ $cids = array(
 \Drupal::cache()->get('jeff');
 
 // 
+\Drupal::cache()->set('jeff', 'goven');
+\Drupal::cache()->delete('jeff');
+\Drupal::cache()->get('jeff');
+\Drupal::cache()->get('jeff', TRUE);
