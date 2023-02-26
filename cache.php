@@ -62,3 +62,17 @@ $cids = array(
 \Drupal::cache()->delete('jeff');
 \Drupal::cache()->get('jeff');
 \Drupal::cache()->get('jeff', TRUE);
+
+//
+// node:5 — cache tag for Node entity 5 (invalidated whenever it changes)
+// user:3 — cache tag for User entity 3 (invalidated whenever it changes)
+// node_list — list cache tag for Node entities (invalidated whenever any Node entity is updated, deleted or created, i.e., when a listing of nodes may need to change). Applicable to any entity type in following format: {entity_type}_list.
+// node_list:article — list cache tag for the article bundle (content type). Applicable to any entity + bundle type in following format: {entity_type}_list:{bundle}.
+// config:node_type_list — list cache tag for Node type entities (invalidated whenever any content types are updated, deleted or created). Applicable to any entity type in the following format: config:{entity_bundle_type}_list.
+// config:system.performance — cache tag for the system.performance configuration
+// library_info — cache tag for asset libraries
+
+\Drupal::cache()->set('jeff', 'goven', Cache::PERMANENT, array('user:1', 'node:1'));
+\Drupal::cache()->set('jeff2', 'goven2', Cache::PERMANENT, array('user:2', 'node:2'));
+\Drupal::cache()->set('jeff3', 'goven3', Cache::PERMANENT, array('user:3', 'node:3'));
+Cache::invalidateTags(array('node:1'));
