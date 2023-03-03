@@ -66,3 +66,4 @@ if ($result) {
 
 // Dynamic queries
 // Should be used for INSERT, UPDATE, or DELETE queries.
+
