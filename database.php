@@ -23,3 +23,46 @@ $connection = Database::getConnection('default', 'other_database');
 // To set the active connection and return it use the following:
 Database::setActiveConnection('other_database');
 $database = Database::getConnection();
+
+// Static queries
+// Should be used for simple SELECT query
+$database = \Drupal::database();
+$query = $database->query("SELECT * FROM {node}");
+$result = $query->fetchAll();
+
+$database = \Drupal::database();
+$query = $database->query("SELECT * FROM {node} WHERE nid = :nid", array(
+  ':nid' => 5,
+));
+$result = $query->fetchAll();
+
+$database = \Drupal::database();
+$query = $database->query("SELECT * FROM {node} WHERE nid IN (:nids[])", array(
+  ':nids[]' => array(3, 4, 5)
+));
+$result = $query->fetchAll();
+
+$database = \Drupal::database();
+$query = $database->query("SELECT * FROM {node} WHERE nid IN (:nid1, :nid2, :nid3)", array(
+  ':nid1' => 3,
+  ':nid2' => 4,
+  ':nid3' => 5,
+));
+$result = $query->fetchAll();
+
+// Result is array
+$database = \Drupal::database();
+$query = $database->query("SELECT * FROM {node} WHERE nid IN (:nid1, :nid2, :nid3)", array(
+  ':nid1' => 3,
+  ':nid2' => 4,
+  ':nid3' => 5,
+));
+if ($result) {
+  while ($row = $result->fetchAssoc()) {
+    $row['nid'];
+    $row['type'];
+  }
+}
+
+// Dynamic queries
+// Should be used for INSERT, UPDATE, or DELETE queries.
