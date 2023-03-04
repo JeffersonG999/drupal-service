@@ -65,14 +65,27 @@ if ($result) {
 }
 
 // Dynamic queries
-// Should be used for INSERT, UPDATE, or DELETE queries.
+// Should be used for INSERT, UPDATE, or DELETE queries, Or Complex SELECT query
+
+// Multiple field
 $query = \Drupal::database()->select('node', 'n')
 ->condition('n.nid', 3, '=')
 ->fields('n', ['nid', 'vid', 'type', 'langcode'])
 ->range(0, 50);
 $result = $query->execute();
-foreach ($result as $record) {
-}
+
+$query = \Drupal::database()->select('node', 'n')
+->condition('n.nid', 3, '=')
+->fields('n')
+->range(0, 50);
+$result = $query->execute();
+
+// Single Field
+$query = \Drupal::database()->select('node', 'n');
+$query->condition('n.nid', 1, '=');
+$query->addField('n', 'type');
+$result = $query->execute();
+$result->fetchField();
 
 // Debug
 echo $query;
@@ -87,3 +100,49 @@ $result = $select->execute()->fetchField();
 $select = \Drupal::database()->select('node', 'n');
 $select->addExpression('COUNT(nid)');
 $result = $select->execute()->fetchField();
+
+// Joins
+// To join against another table, use the join(), innerJoin(), leftJoin(), or addJoin()
+$query = \Drupal::database()->select('node', 'n');
+$query->condition('n.nid', 1, '=');
+$query->fields('n');
+$query->join('users', 'u', 'n.uuid = u.uid AND u.uid = :uid', array(':uid' => 1));
+$result = $query->execute()->fetchAll();
+
+$query =\Drupal::database()->select('node', 'n', $options);
+$query->join('node_field_data', 'nfd', 'n.nid = nfd.nid');
+$query
+  ->fields('n', array('nid'))
+  ->fields('nfd', array('title'))
+  ->condition('nfd.type', 'page')
+  ->condition('nfd.status', '1')
+  ->orderBy('nfd.created', 'DESC')
+  ->addTag('node_access');
+
+// Count Queries
+// Get number of rows
+$query = \Drupal::database()->select('node', 'n');
+$query->condition('n.nid', 1, '=');
+$query->fields('n');
+$result = $query->countQuery()->execute()->fetchField();
+
+// Distinct
+$query = \Drupal::database()->select('node', 'n');
+$query->condition('n.nid', 1, '=');
+$query->fields('n');
+$result = $query->distinct()->execute()->fetchAll();
+
+// Group By
+$query = \Drupal::database()->select('node', 'n')
+->fields('n', ['uid']);
+$query->addExpression('count(uid)', 'uid_node_count');
+$query->groupBy("n.uid");
+$result = $query->execute()->fetchAll();
+
+// Having by
+$query = $connection->select('node', 'n')
+->fields('n',['uid']);
+$query->addExpression('count(uid)', 'uid_node_count');
+$query->groupBy("n.uid");
+$query->having('COUNT(uid) >= :matches', [':matches' => 2]);
+$results = $query->execute();
