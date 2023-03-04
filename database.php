@@ -172,3 +172,19 @@ $query->fields('n');
 $result = $query->execute()->fetchAll();
 
 // Condition Groups
+$query = \Drupal::database()->select('node', 'n');
+
+$orGroup = $query->orConditionGroup()
+->condition('type', 'page', '=')
+->condition('type', 'article', '=');
+$query->condition($orGroup);
+
+$andGroup = $query->andConditionGroup()
+->condition('nid', 0, '>')
+->condition('nid', 3, '<');
+$query->condition($andGroup);
+
+$query->fields('n');
+$result = $query->execute()->fetchAll();
+
+// Ordering and filtering
