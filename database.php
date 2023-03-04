@@ -188,3 +188,13 @@ $query->fields('n');
 $result = $query->execute()->fetchAll();
 
 // Ordering and filtering
+$query = \Drupal::database()->select('node', 'n');
+$query->fields('n');
+$query->orderBy('n.nid', 'DESC');
+$result = $query->execute()->fetchAll();
+
+// Range
+$query = \Drupal::database()->select('node', 'n');
+$query->fields('n');
+$query->range(0, 3);
+$result = $query->execute()->fetchAll();
