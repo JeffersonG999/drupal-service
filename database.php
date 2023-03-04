@@ -146,3 +146,29 @@ $query->addExpression('count(uid)', 'uid_node_count');
 $query->groupBy("n.uid");
 $query->having('COUNT(uid) >= :matches', [':matches' => 2]);
 $results = $query->execute();
+
+// Conditions
+// Supported Operators
+// '=', '<>', '<', '<=', '>', '>='
+// 'IN', 'NOT IN'
+// 'BETWEEN', 'NOT BETWEEN'
+// 'IS NULL', 'IS NOT NULL', 'EXISTS', 'NOT EXISTS'
+$query = \Drupal::database()->select('node', 'n');
+$query->condition('n.nid', 0, '>');
+$query->condition('n.type', array('page', 'article'), 'IN');
+$query->condition('n.langcode', 'fr', '=');
+$query->fields('n');
+$result = $query->execute()->fetchAll();
+
+// $query->isNull($field);
+// $query->isNotNull($field);
+// $query->exists($field);
+// $query->notExists($field);
+$query = \Drupal::database()->select('node', 'n');
+$query->isNotNull('n.nid');
+$query->condition('n.type', array('page', 'article'), 'IN');
+$query->condition('n.langcode', 'fr', '=');
+$query->fields('n');
+$result = $query->execute()->fetchAll();
+
+// Condition Groups
