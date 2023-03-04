@@ -198,3 +198,31 @@ $query = \Drupal::database()->select('node', 'n');
 $query->fields('n');
 $query->range(0, 3);
 $result = $query->execute()->fetchAll();
+
+// Result
+// Get single result
+$query = \Drupal::database()->select('node', 'n');
+$query->fields('n');
+$query->range(0, 3);
+$result = $query->execute();
+$record = $result->fetch(); // Object
+$record = $result->fetchObject(); // Object
+$record = $result->fetchAssoc(); // Array
+
+// Get specific field
+$query = \Drupal::database()->select('node', 'n');
+$query->fields('n', ['nid', 'vid', 'type', 'langcode']);
+$query->range(0, 3);
+$result = $query->execute();
+$record = $result->fetchField(0); // Nid field
+$record = $result->fetchField(1); // Vid field
+$record = $result->fetchField(2); // Type fied
+$record = $result->fetchField(3); // Langcode fied
+
+// Get number od row
+$query = \Drupal::database()->select('node', 'n');
+$query->fields('n');
+$query->range(0, 3);
+$result = $query->countQuery()->execute()->fetchField();
+
+// Get multiple values
