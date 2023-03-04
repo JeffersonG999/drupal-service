@@ -231,3 +231,7 @@ $query->fields('n');
 $result = $query->execute();
 $records = $result->fetchAll(); // Array of object
 $records = $result->fetchAllAssoc('nid'); // Array of object with array key = field
+$records = $result->fetchAllKeyed(); // Array with key = field_0 => value = field_1
+$records = $result->fetchAllKeyed(0, 2); // Array with key = field_0 => value = field_2
+$records = $result->fetchCol(); // Array with value = field_0, key is auto
+$records = $result->fetchCol(2); // Array with value = field_2, key is auto
