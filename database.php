@@ -66,4 +66,24 @@ if ($result) {
 
 // Dynamic queries
 // Should be used for INSERT, UPDATE, or DELETE queries.
+$query = \Drupal::database()->select('node', 'n')
+->condition('n.nid', 3, '=')
+->fields('n', ['nid', 'vid', 'type', 'langcode'])
+->range(0, 50);
+$result = $query->execute();
+foreach ($result as $record) {
+}
 
+// Debug
+echo $query;
+print_r((string) $query);
+print_r($query->arguments());
+
+// Conditions
+$select = \Drupal::database()->select('node', 'n');
+$select->addExpression('MAX(nid)');
+$result = $select->execute()->fetchField();
+
+$select = \Drupal::database()->select('node', 'n');
+$select->addExpression('COUNT(nid)');
+$result = $select->execute()->fetchField();
