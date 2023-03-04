@@ -226,3 +226,8 @@ $query->range(0, 3);
 $result = $query->countQuery()->execute()->fetchField();
 
 // Get multiple values
+$query = \Drupal::database()->select('node', 'n');
+$query->fields('n');
+$result = $query->execute();
+$records = $result->fetchAll(); // Array of object
+$records = $result->fetchAllAssoc('nid'); // Array of object with array key = field
