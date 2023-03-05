@@ -316,3 +316,21 @@ $query->condition('type', 'page');
 ->key('nid', 1)
 ->execute();
 
+// Upsert Queries
+$upsert = \Drupal::database()->upsert('mytable')
+->fields(['field1', 'field2'])
+->key('id');
+
+$upsert->values([
+    'field1' => 3,
+    'field2' => 5,
+    'id' => 2,
+  ]);
+
+  $upsert->values([
+    'field1' => 4,
+    'field2' => 5,
+    'id' => 3,
+  ]);
+
+  $result = $upsert->execute();
