@@ -238,3 +238,81 @@ $records = $result->fetchCol(2); // Array with value = field_2, key is auto
 
 // Fetching Into a Custom Class
 // A revoir
+
+// Insert Queries
+// Compact form
+\Drupal::database()->insert('node')
+->fields([
+  'title' => 'Simple way',
+  'uid' => 1,
+  'created' => \Drupal::time()->getRequestTime(),
+])
+->execute();
+
+\Drupal::database()->insert('node')
+->fields(['title', 'uid', 'created'])
+->values([
+  'title' => 'Complex way',
+  'uid' => 1,
+  'created' => \Drupal::time()->getRequestTime(),
+])
+->execute();
+
+\Drupal::database()->insert('node')
+->fields(['title', 'uid', 'created'])
+->values([
+  'title' => 'First',
+  'uid' => 1,
+  'created' => \Drupal::time()->getRequestTime(),
+])
+->values([
+  'title' => 'Second',
+  'uid' => 1,
+  'created' => \Drupal::time()->getRequestTime(),
+])
+->values([
+  'title' => 'Third',
+  'uid' => 1,
+  'created' => \Drupal::time()->getRequestTime(),
+])
+->execute();
+
+$query = \Drupal::database()->select('node', 'n');
+$query->addField('n', 'nid');
+$query->addField('u', 'name');
+$query->condition('type', 'page');
+// Perform the insert.
+\Drupal::database()->insert('other_table')
+->from($query)
+->execute();
+
+// Update Queries
+\Drupal::database()->update('node')
+->fields([
+  'field1' => 5,
+  'field2' => 6,
+])
+->condition('nid', 1, '=')
+->execute();
+
+// Merge Queries
+// Insert + Update
+\Drupal::database()->merge('node')
+->key('nid', 1)
+->fields([
+  'field1' => 5,
+  'field2' => 6,
+])
+->execute();
+
+\Drupal::database()->merge('node')
+->insertFields([
+  'field1' => 5,
+  'field2' => 6,
+])
+->updateFields([
+  'field1' => 10,
+])
+->key('nid', 1)
+->execute();
+
