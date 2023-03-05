@@ -235,3 +235,6 @@ $records = $result->fetchAllKeyed(); // Array with key = field_0 => value = fiel
 $records = $result->fetchAllKeyed(0, 2); // Array with key = field_0 => value = field_2
 $records = $result->fetchCol(); // Array with value = field_0, key is auto
 $records = $result->fetchCol(2); // Array with value = field_2, key is auto
+
+// Fetching Into a Custom Class
+// A revoir
