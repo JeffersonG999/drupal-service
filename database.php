@@ -287,33 +287,38 @@ $query->condition('type', 'page');
 ->execute();
 
 // Update Queries
-\Drupal::database()->update('node')
+\Drupal::database()->update('web_example')
 ->fields([
-  'field1' => 5,
-  'field2' => 6,
+  'uid' => 2,
+  'status' => 6,
+  'data'=> time(),
 ])
-->condition('nid', 1, '=')
+->condition('id', 1, '=')
 ->execute();
 
 // Merge Queries
 // Insert + Update
-\Drupal::database()->merge('node')
-->key('nid', 1)
+\Drupal::database()->merge('web_example')
+->key('id', 1)
 ->fields([
-  'field1' => 5,
-  'field2' => 6,
+  'uid' => 2,
+  'status' => 6,
+  'data'=> time(),
 ])
 ->execute();
 
-\Drupal::database()->merge('node')
+\Drupal::database()->merge('web_example')
 ->insertFields([
-  'field1' => 5,
-  'field2' => 6,
+  'uid' => 2,
+  'status' => 6,
+  'data'=> time(),
 ])
 ->updateFields([
-  'field1' => 10,
+  'uid' => 2,
+  'status' => 0,
+  'data' => 'jefferson'
 ])
-->key('nid', 1)
+->key('id', 7)
 ->execute();
 
 // Upsert Queries
