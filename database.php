@@ -241,39 +241,39 @@ $records = $result->fetchCol(2); // Array with value = field_2, key is auto
 
 // Insert Queries
 // Compact form
-\Drupal::database()->insert('node')
+\Drupal::database()->insert('web_example')
 ->fields([
-  'title' => 'Simple way',
   'uid' => 1,
-  'created' => \Drupal::time()->getRequestTime(),
+  'status' => 1,
+  'data' => time(),
 ])
 ->execute();
 
-\Drupal::database()->insert('node')
-->fields(['title', 'uid', 'created'])
+\Drupal::database()->insert('web_example')
+->fields(['uid', 'status', 'data'])
 ->values([
-  'title' => 'Complex way',
   'uid' => 1,
-  'created' => \Drupal::time()->getRequestTime(),
+  'status' => 1,
+  'data' => time(),
 ])
 ->execute();
 
-\Drupal::database()->insert('node')
-->fields(['title', 'uid', 'created'])
+\Drupal::database()->insert('web_example')
+->fields(['uid', 'status', 'data'])
 ->values([
-  'title' => 'First',
   'uid' => 1,
-  'created' => \Drupal::time()->getRequestTime(),
+  'status' => 1,
+  'data' => time(),
 ])
 ->values([
-  'title' => 'Second',
-  'uid' => 1,
-  'created' => \Drupal::time()->getRequestTime(),
+  'uid' => 2,
+  'status' => 1,
+  'data' => time(),
 ])
 ->values([
-  'title' => 'Third',
-  'uid' => 1,
-  'created' => \Drupal::time()->getRequestTime(),
+  'uid' => 3,
+  'status' => 0,
+  'data' => time(),
 ])
 ->execute();
 
@@ -282,7 +282,7 @@ $query->addField('n', 'nid');
 $query->addField('u', 'name');
 $query->condition('type', 'page');
 // Perform the insert.
-\Drupal::database()->insert('other_table')
+\Drupal::database()->insert('web_example')
 ->from($query)
 ->execute();
 
@@ -291,7 +291,7 @@ $query->condition('type', 'page');
 ->fields([
   'uid' => 2,
   'status' => 6,
-  'data'=> time(),
+  'data' => time(),
 ])
 ->condition('id', 1, '=')
 ->execute();
@@ -303,7 +303,7 @@ $query->condition('type', 'page');
 ->fields([
   'uid' => 2,
   'status' => 6,
-  'data'=> time(),
+  'data' => time(),
 ])
 ->execute();
 
@@ -311,7 +311,7 @@ $query->condition('type', 'page');
 ->insertFields([
   'uid' => 2,
   'status' => 6,
-  'data'=> time(),
+  'data' => time(),
 ])
 ->updateFields([
   'uid' => 2,
@@ -322,20 +322,43 @@ $query->condition('type', 'page');
 ->execute();
 
 // Upsert Queries
-$upsert = \Drupal::database()->upsert('mytable')
-->fields(['field1', 'field2'])
+$upsert = \Drupal::database()->upsert('web_example')
+->fields(['uid', 'status', 'data'])
 ->key('id');
-
 $upsert->values([
-    'field1' => 3,
-    'field2' => 5,
-    'id' => 2,
-  ]);
+  'uid' => 2,
+  'status' => 0,
+  'data' => 'jefferson',
+  'id' => 1,
+]);
+$upsert->values([
+  'uid' => 2,
+  'status' => 0,
+  'data' => 'jefferson goven',
+  'id' => 2,
+]);
+$upsert->execute();
 
-  $upsert->values([
-    'field1' => 4,
-    'field2' => 5,
-    'id' => 3,
-  ]);
+// Delete Queries
+\Drupal::database()->delete('web_example')
+->condition('id', 1)
+->execute();
 
-  $result = $upsert->execute();
+// Transaction
+// If second query depend on first query and secon query failed, transaction cancel first query
+$transaction = \Drupal::database()->startTransaction();
+try {
+  // Do some thing that writes to the database, such as creating an entity.
+  $media->save();
+  // Do another database write that depends upon the first.
+  $node->save();
+}
+catch (Exception $e) {
+  // There was an error in writing to the database, so the database is rolled back
+  // to the state when the transaction was started.
+  $transaction->rollBack();
+   // Log the exception to watchdog.
+  \Drupal::logger('type')->error($e->getMessage());
+}
+// Commit the transaction by unsetting the $transaction variable.
+unset($transaction);
