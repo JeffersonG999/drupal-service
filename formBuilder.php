@@ -1,37 +1,63 @@
 // https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21FormBuilderInterface.php/interface/FormBuilderInterface/10
 
 // routing.yml
-example.form:
-  path: '/example/form'
+web.form:
+  path: '/web/form'
   defaults:
     _title: 'Example'
-    _form: 'Drupal\example\Form\ExampleForm'
+    _form: 'Drupal\web\Form\ExampleForm'
   requirements:
     _permission: 'access content'
 
-example.form:
-  path: '/example/form'
+web.form.controller.a:
+  path: '/web/form/controller/a'
   defaults:
     _title: 'Example'
-    _controller: '\Drupal\example\Controller\ExampleController::build'
+    _controller: '\Drupal\web\Controller\WebController::a'
+  requirements:
+    _permission: 'access content'
+
+web.form.controller.b:
+  path: '/web/form/controller/b'
+  defaults:
+    _title: 'Example'
+    _controller: '\Drupal\web\Controller\WebController::b'
+  requirements:
+    _permission: 'access content'
+
+web.form.controller.c:
+  path: '/web/form/controller/c'
+  defaults:
+    _title: 'Example'
+    _controller: '\Drupal\web\Controller\WebController::c'
   requirements:
     _permission: 'access content'
 
 // ExampleForm.php
 <?php
 
-namespace Drupal\example\Form;
+namespace Drupal\web\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Provides a Web form.
+ */
 class ExampleForm extends FormBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId() {
     return 'web_example';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
+
     $form['message'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Message'),
@@ -49,12 +75,18 @@ class ExampleForm extends FormBase {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (mb_strlen($form_state->getValue('message')) < 10) {
       $form_state->setErrorByName('message', $this->t('Message should be at least 10 characters.'));
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus($this->t('The message has been sent.'));
   }
@@ -64,9 +96,14 @@ class ExampleForm extends FormBase {
 //
 <?php
 
-function example_theme($existing, $type, $theme, $path) {
+function web_theme($existing, $type, $theme, $path) {
   return [
-    'example_page' => [
+    'web_page_b' => [
+      'variables' => [
+        'example_form' => '',
+      ],
+    ],
+    'web_page_c' => [
       'variables' => [
         'example_form' => '',
       ],
@@ -75,25 +112,61 @@ function example_theme($existing, $type, $theme, $path) {
 }
 
 
+
 // ExampleController.php
 <?php
 
-namespace Drupal\example\Controller;
+namespace Drupal\web\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 
-class ExampleController extends ControllerBase {
+/**
+ * Returns responses for Web routes.
+ */
+class WebController extends ControllerBase {
 
-  public function build() {
+  /**
+   * Builds the response.
+   */
+  public function a() {
+    $myForm = \Drupal::formBuilder()->getForm('Drupal\web\Form\ExampleForm');
+    $renderer = \Drupal::service('renderer');
+    $myFormHtml = $renderer->render($myForm);
+
+    $build['content'] = [
+      '#items',
+      '#markup' => $myFormHtml
+    ];
+    return $build;
+  }
+
+  public function b() {
     return [
-      '#theme' => 'example_page',
-      '#example_form' => \Drupal::formBuilder()->getForm('Drupal\example\Form\ExtractForm'),
+      '#theme' => 'web_page_b',
+      '#example_form' => \Drupal::formBuilder()->getForm('Drupal\web\Form\ExampleForm'),
+    ];
+  }
+
+  public function c() {
+    return [
+      '#theme' => 'web_page_c',
+      '#example_form' => \Drupal::formBuilder()->getForm('Drupal\web\Form\ExampleForm'),
     ];
   }
 
 }
 
-// example-page.html.twig
+// web-page-b.html.twig
 <div>
   {{ example_form }}
 </div>
+
+// web-page-c.html.twig
+<form{{ attributes }}>
+    {{ example_form.messages }}
+    {{ example_form.message }}
+    {{ example_form.form_token }}
+    {{ example_form.form_build_id }}
+    {{ example_form.form_id }}
+    {{ example_form.actions.submit }}
+</form>
