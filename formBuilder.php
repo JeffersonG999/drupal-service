@@ -61,7 +61,7 @@ class ExampleForm extends FormBase {
     $form['message'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Message'),
-      '#default_value' => $message
+      '#value' => $message
       '#required' => TRUE,
     ];
 
