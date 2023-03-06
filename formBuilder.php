@@ -56,11 +56,12 @@ class ExampleForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state, $message = NULL) {
 
     $form['message'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Message'),
+      '#default_value' => $message
       '#required' => TRUE,
     ];
 
@@ -130,6 +131,8 @@ class WebController extends ControllerBase {
    */
   public function a() {
     $myForm = \Drupal::formBuilder()->getForm('Drupal\web\Form\ExampleForm');
+    // Pass argument to build form
+    $myForm = \Drupal::formBuilder()->getForm('Drupal\web\Form\ExampleForm', 'Lorem ipsum. Lorem Ipsum.');
     $renderer = \Drupal::service('renderer');
     $myFormHtml = $renderer->render($myForm);
 
