@@ -1,3 +1,5 @@
+https://www.drupal.org/docs/contributed-modules/http-client-manager
+
 <?php
 
 $request = \Drupal::httpClient()->request('GET', 'https://api.census.gov/data/2019/acs/acs1?get=NAME,B02015_009E,B02015_009M', [
