@@ -11,6 +11,8 @@ $request = \Drupal::httpClient()->request('GET', 'https://api.census.gov/data/ti
 $request = \Drupal::httpClient()->get('https://api.census.gov/data/timeseries/intltrade/exports/enduse?get=DISTRICT,DIST_NAME,ALL_VAL_MO,ALL_VAL_YR&YEAR=2016&MONTH=06');
 $status_code = $request->getStatusCode();
 $headers = $request->getHeaders();
-//$body = $request->getBody();
+$body = $request->getBody();
 $body_json = json_decode($request->getBody(), TRUE);
 $posts = $request->getBody()->getContents();
+$posts_json = json_decode($request->getBody()->getContents(), TRUE);
+$reason = $request->getReasonPhrase();
