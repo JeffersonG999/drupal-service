@@ -98,3 +98,20 @@ $query->condition($condition_or);
 
 $uids = $query->execute();
 
+// Debug
+$query = \Drupal::entityQuery('node');
+$query->condition('type', 'article');
+$query->accessCheck(TRUE);
+$debug = $query->__toString();
+
+// Condition on referenced entities
+$query = \Drupal::entityQuery('node');
+$query->condition('type', 'article');
+$query->condition('field_page.entity:node.field_tags.entity:taxonomy_term.name', 'Noir');
+$query->accessCheck(TRUE);
+$nid = $query->execute();
+
+// Compter
+$query = \Drupal::entityQuery('node');
+$query->condition('type', 'article');
+$nids = $query->count()->execute();
