@@ -58,6 +58,14 @@ $query->condition('roles', 'Administrator', 'CONTAINS') ;
 $query->accessCheck(TRUE);
 $uid = $query->execute();
 
+// Feth file
+$query = Drupal::entityQuery('file');
+$query->condition('status', \Drupal\file\FileInterface::STATUS_PERMANENT, '<>');
+$query->condition('changed', REQUEST_TIME - $age, '<');
+$query->range(0, 100);
+$fids = $query->execute();
+
+$files = $storage->loadMultiple($fids);
 
 // Condition OR
 $query = \Drupal::entityQuery('user');
