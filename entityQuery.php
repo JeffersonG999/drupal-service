@@ -80,3 +80,21 @@ $condition_and->condition('field_nom', 'Goven');
 $query->condition($condition_and);
 
 $uids = $query->execute();
+
+// Condition OR et AND
+$query = \Drupal::entityQuery('user');
+
+$condition_or = $query->orConditionGroup();
+$condition_or->condition('roles', 'Administrator');
+
+$condition_and = $query->andConditionGroup();
+
+$condition_and->condition('field_prenom', 'Jeff');
+$condition_and->condition('field_nom', 'Goven');
+
+$condition_or->condition($condition_and);
+
+$query->condition($condition_or);
+
+$uids = $query->execute();
+
