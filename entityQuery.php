@@ -1,13 +1,19 @@
 <?php
 
-// Fetch node
+// Load service node
 $query = \Drupal::entityQuery('node');
 
-// Fetch taxonomy
+// Load service taxonomy
 $query = \Drupal::entityQuery('taxonomy_term');
 
-// Fetch user
+// Load service user
 $query = \Drupal::entityQuery('user');
+
+// Load service
+$query = \Drupal::service('entity.query');
+$query->get('node');
+$query->get('taxonomy');
+$query->get('user');
 
 // Fetch node
 $query = \Drupal::entityQuery('node');
@@ -24,6 +30,7 @@ $query->sort('nid', 'DESC'); // ASC
 $query->sort('created', 'DESC'); // ASC
 $query->sort('changed', 'DESC'); // ASC
 $query->range(0, 4);
+$query->pager(10);
 $query->accessCheck(TRUE);
 $nids = $query->execute();
 
@@ -41,7 +48,35 @@ $query->notExists('field_some_field');
 $query->sort('tid', 'ASC'); // DESC
 $query->sort('changed', 'ASC'); // DESC
 $query->range(0, 4);
+$query->->pager(10);
 $query->accessCheck(TRUE);
 $tids = $query->execute();
 
 // Fetch user
+$query = \Drupal::entityQuery('user');
+$query->condition('roles', 'Administrator', 'CONTAINS') ;
+$query->accessCheck(TRUE);
+$uid = $query->execute();
+
+
+// Condition OR
+$query = \Drupal::entityQuery('user');
+
+$condition_or = $query->orConditionGroup();
+$condition_or->condition('field_prenom', 'Jefferson');
+$condition_or->condition('field_prenom', 'Jeff');
+
+$query->condition($condition_or);
+
+$uids = $query->execute();
+
+// Condition AND
+$query = \Drupal::entityQuery('user');
+
+$condition_and = $query->andConditionGroup();
+$condition_and->condition('field_prenom', 'Jefferson');
+$condition_and->condition('field_nom', 'Goven');
+
+$query->condition($condition_and);
+
+$uids = $query->execute();
