@@ -344,6 +344,9 @@ $upsert->execute();
 ->condition('id', 1)
 ->execute();
 
+// Truncate Queries
+\Drupal::database()->truncate('web_example')->execute();
+
 // Transaction
 // If second query depend on first query and secon query failed, transaction cancel first query
 $transaction = \Drupal::database()->startTransaction();
