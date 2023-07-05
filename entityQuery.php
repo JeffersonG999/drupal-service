@@ -48,7 +48,7 @@ $query->notExists('field_some_field');
 $query->sort('tid', 'ASC'); // DESC
 $query->sort('changed', 'ASC'); // DESC
 $query->range(0, 4);
-$query->->pager(10);
+$query->pager(10);
 $query->accessCheck(TRUE);
 $tids = $query->execute();
 
