@@ -365,3 +365,16 @@ catch (Exception $e) {
 }
 // Commit the transaction by unsetting the $transaction variable.
 unset($transaction);
+
+Règles d'or
+Toujours préférer l'Entity API (entityTypeManager) pour les entités Drupal (nodes, terms, users…) — la Database API est réservée aux tables custom ou aux requêtes de performance critique qui nécessitent des jointures complexes impossibles via l'Entity Query.
+php// ✗ À éviter pour les entités Drupal
+$db->select('node_field_data', 'n')...
+
+// ✓ Préférer
+\Drupal::entityTypeManager()->getStorage('node')->getQuery()...
+
+// ✓ Database API — cas légitimes
+$db->select('monmodule_table', 'm')...   // table custom
+$db->select('watchdog', 'w')...          // lecture de logs
+$db->select('sessions', 's')...          // sessions
