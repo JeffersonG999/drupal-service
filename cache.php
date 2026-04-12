@@ -8,7 +8,15 @@ https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Cache%21CacheBack
 // Request a specific cache bin
 \\Drupal::cache('bin2');
 
-//
+// Example of cache bin
+cache.default Cache général
+cache.render Éléments de rendu
+cache.data Données applicatives
+cache.bootstrap Données de démarrage
+cache.config Configuration
+cache.discovery Plugins, annotations
+
+// Lire
 \Drupal::cache()->set('jeff', 'goven');
 $cache = \Drupal::cache()->get('jeff');
 $cache->cid; // jeff
@@ -20,7 +28,7 @@ $cache->tags; // array()
 $cache->checksum; // 0
 $cache->valid; // 1
 
-// 
+//  Set an array
 $items = array(
   'jeff' => array(
     'data' => 'gov'
@@ -38,17 +46,17 @@ $cids = array(
 \Drupal::cache()->get('jefferson');
 \Drupal::cache()->getMultiple($cids);
 
-//
+// Invalide un cache
 \Drupal::cache()->invalidate('jeff');
 \Drupal::cache()->get('jeff');
 \Drupal::cache()->get('jeff', TRUE);
 
-//
+// Invalide plusieurs caches
 \Drupal::cache()->invalidateMultiple($cids);
 \Drupal::cache()->getMultiple($cids);
 \Drupal::cache()->getMultiple($cids, TRUE);
   
-//
+// Invalide tous les caches
 \Drupal::cache()->invalidateAll();
 \Drupal::cache()->getMultiple($cids);
 \Drupal::cache()->getMultiple($cids, TRUE);
@@ -65,8 +73,14 @@ $cids = array(
 \Drupal::cache()->get('jeff');
 \Drupal::cache()->get('jeff', TRUE);
 
-//
+// Avec expiration
 \Drupal::cache()->set('my_cache_item', $school_list, \Drupal::time()->getRequestTime() + (86400));
+
+// Plusieurs méthodes d'invalidation
+// Invalider
+\Drupal::cache()->delete('mon_module:ma_cle');
+\Drupal::cache()->deleteMultiple(['cle1', 'cle2']);
+\Drupal::cache()->deleteAll(); // vide tout le bin
 
 //
 // node:5 — cache tag for Node entity 5 (invalidated whenever it changes)
@@ -81,6 +95,36 @@ $cids = array(
 \Drupal::cache()->set('jeff2', 'goven2', Cache::PERMANENT, array('user:2', 'node:2'));
 \Drupal::cache()->set('jeff3', 'goven3', Cache::PERMANENT, array('user:3', 'node:3'));
 Cache::invalidateTags(array('node:1'));
+
+// Cache in service/class
+// Add in service.yml
+arguments: ['@cache.data']
+
+// In Service class
+use Drupal\Core\Cache\CacheBackendInterface;
+
+class MonService {
+  public function __construct(
+    private readonly CacheBackendInterface $cache,
+  ) {}
+
+  public function getDonnees(int $id): array {
+    $cid = 'monmodule:donnees:' . $id;
+
+    $cached = $this->cache->get($cid);
+    if ($cached !== FALSE) {
+      return $cached->data;
+    }
+
+    $this->cache->set($cid, $data, CacheBackendInterface::CACHE_PERMANENT, [
+      'node:' . $id,
+      'monmodule_tag',
+    ]);
+
+    return $data;
+  }
+}
+
 
 // Drupal core cache context
 cookies
