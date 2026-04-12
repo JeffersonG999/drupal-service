@@ -82,7 +82,7 @@ $cids = array(
 \Drupal::cache()->deleteMultiple(['cle1', 'cle2']);
 \Drupal::cache()->deleteAll(); // vide tout le bin
 
-//
+// Cache Tags — invalidation par tags (le plus puissant)
 // node:5 — cache tag for Node entity 5 (invalidated whenever it changes)
 // user:3 — cache tag for User entity 3 (invalidated whenever it changes)
 // node_list — list cache tag for Node entities (invalidated whenever any Node entity is updated, deleted or created, i.e., when a listing of nodes may need to change). Applicable to any entity type in following format: {entity_type}_list.
@@ -95,6 +95,23 @@ $cids = array(
 \Drupal::cache()->set('jeff2', 'goven2', Cache::PERMANENT, array('user:2', 'node:2'));
 \Drupal::cache()->set('jeff3', 'goven3', Cache::PERMANENT, array('user:3', 'node:3'));
 Cache::invalidateTags(array('node:1'));
+
+use Drupal\Core\Cache\Cache;
+
+// Écrire avec des tags
+$cache->set('ma_cle', $data, CacheBackendInterface::CACHE_PERMANENT, [
+  'node:42',           // invalidé quand le node 42 est modifié
+  'taxonomy_term:5',   // invalidé quand le terme 5 est modifié
+  'config:system.site',
+  'monmodule_liste',   // tag custom
+]);
+
+// Invalider manuellement par tag
+Cache::invalidateTags(['monmodule_liste']);
+Cache::invalidateTags(['node:42']);
+
+// Tags utiles fournis par Drupal automatiquement :
+// node:{nid}, taxonomy_term:{tid}, user:{uid}, config:{config_name}
 
 // Cache in service/class
 // Add in service.yml
@@ -125,6 +142,58 @@ class MonService {
   }
 }
 
+// Cache Contexts — vary par contexte
+$build['#cache'] = [
+  'contexts' => [
+    'user.roles',         // varie par rôle
+    'languages:language_interface', // varie par langue
+    'url.path',           // varie par URL
+    'url.query_args',     // varie par query string
+  ],
+  'tags' => ['node_list'],
+  'max-age' => 3600,
+];
+
+// Cache dans les Render Arrays
+$build = [
+  '#theme' => 'mon_theme',
+  '#data'  => $data,
+  '#cache' => [
+    'keys'     => ['monmodule', 'ma_vue', $id],  // clé unique du render cache
+    'tags'     => ['node:' . $id, 'taxonomy_term_list'],
+    'contexts' => ['user.roles', 'languages:language_interface'],
+    'max-age'  => CacheBackendInterface::CACHE_PERMANENT, // ou nb de secondes
+  ],
+];
+
+// Pattern classique : cache-then-compute
+$cid = 'monmodule:bloc:' . $langcode;
+
+if ($cached = $this->cache->get($cid)) {
+  return $cached->data;
+}
+
+$tags = Cache::mergeTags(
+  ['node_list', 'taxonomy_term_list'],
+  $donnees_tags  // tags collectés dynamiquement
+);
+
+$this->cache->set($cid, $data, CacheBackendInterface::CACHE_PERMANENT, $tags);
+
+// Fusion
+use Drupal\Core\Cache\Cache;
+
+// Fusionner des tags
+$tags = Cache::mergeTags($tags1, $tags2);
+
+// Fusionner des contexts
+$contexts = Cache::mergeContexts($ctx1, $ctx2);
+
+// Fusionner des max-age (retourne le minimum)
+$max_age = Cache::mergeMaxAges(3600, 1800); // = 1800
+
+// max-age "jamais cachable"
+Cache::mergeMaxAges(0, 3600); // = 0
 
 // Drupal core cache context
 cookies
