@@ -378,3 +378,16 @@ $db->select('node_field_data', 'n')...
 $db->select('monmodule_table', 'm')...   // table custom
 $db->select('watchdog', 'w')...          // lecture de logs
 $db->select('sessions', 's')...          // sessions
+
+  // Load by storage in service/class
+// Add in service.yml
+arguments: ['@database']
+
+// In Service class
+use Drupal\Core\Database\Connection;
+
+class MonService {
+  public function __construct(
+    private readonly Connection $database,
+  ) {}
+}
