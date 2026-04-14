@@ -62,3 +62,16 @@ $user->getCreatedTime();
 $user->getLastAccessedTime();
 $user->get('field_organisation')->value;
 
+// Load by storage in service/class
+// Add in service.yml
+arguments: ['@current_user']
+
+// In Service class
+
+use Drupal\Core\Session\AccountProxyInterface;
+
+class MonService {
+  public function __construct(
+    private readonly AccountProxyInterface $currentUser,
+  ) {}
+}
